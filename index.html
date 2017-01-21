@@ -2,34 +2,509 @@
 <html>
 
 <head>
+    <title>Text Adventure</title>
 </head>
 
 <body>
+    <div id="help">Simply type "help" if you are stuck!</div>
+    <input type="text" id="userInput">
+    <button onclick="button()">Submit</button>
+    <div id="content"></div>
 
-    <link rel="stylesheet" type="text/css" href="style.css" />
-    <div id="nav">
-        <table>
-            <tr>
-                <th>
-                    <img src="img/logo.png" class="m">
-                </th>
-                <td class="m">|<a href="index.html">Main</a>|</td>
-                <td class="m"><a href="about.html">About</a>|</td>
-                <td class="m"><a href="history.html">History</a>|</td>
-                <td class="m"><a href="gamelink.html">Games</a>|</td>
-                <td class="m"><a href="survey.html">Chance</a>|</td>
-            </tr>
-
-
-        </table>
-
+    <div id="map">/----------\<br>|.----oy---.|<br>|--ooxo---|<br>|.----o----.|<br>\---------/<br>
     </div>
-    <br><br><br><br><br>
-    <div id="intro">
-        <p>
-            Welcome to my amazing website! The about section will tell you a bit about this project, the games section will just be a few games I made during the course. The chance tab shows some tables off. Hope you enjoy your stay! &#x263A;
-        </p>
-    </div>
+    <script type="text/javascript">
+    //screen res should be 1920x1080
+    var name = prompt("What is your name?");
+    var convo = function(){
+    var reply = prompt(wordList[Math.floor((Math.random() * wordList.length) + 0)]);
+    if (!reply.replace(/\s/g, '').length) {
+    reply = "Am sad";
+
+}
+    if(reply=="end"){
+        return;
+    }
+    wordList.push(reply);
+
+    convo();
+
+
+}
+        var wordList = [
+            "Hi",
+            "This program is not done, but I am too lazy to actually complete it."
+            ];
+        var score = 0;
+        var key = false;
+        var life = 100;
+        var lifeTime = -5
+        if (name == "") {
+            name = "Jim"
+        }
+        document.body.style.backgroundSize = "cover";
+        var input = ""
+        currentRoom = "main"
+        var roomMessage = ""
+        var roomName = "Main"
+
+        var boss = function() {
+            score += 5;
+            console.log("Boss room");
+            var userNumbb = prompt("Looks like you have entered the boss room.\nYou must choose a number between 1 and 10.");
+            var rnumbb = Math.floor((Math.random() * 10) + 1)
+            console.log("Final boss rng: "+ rnumbb)
+            var numbb = parseInt(userNumbb);
+            if (numbb < 1 || numbb > 10) {
+                life = 0
+                alert("That is not a good enough number!\n\nYou died");
+                alert("You will be redirected back to the games page in 10 seconds.");
+                setTimeout(backPage, 10000);
+            } else if (numbb == rnumbb) {
+                alert("You beat the game! Congratz!");
+                alert("You will be redirected back to the games page in 10 seconds.");
+                setTimeout(backPage, 10000);
+            } else {
+                life = 0
+                alert("Looks like your characters has died, better luck next time!");
+                alert("You will be redirected back to the games page in 10 seconds.");
+                setTimeout(backPage, 10000);
+            }
+        }
+
+        var move = function(x) {
+            mapRefresh();
+            score++;
+            life -= lifeTime;
+            lifeTime++;
+            console.log("CurrentRoom before move: "+currentRoom)
+            //See if this is key room
+            if(currentRoom == "key"){
+                if (x == "n") {
+                } else if (x == "s") {
+
+                } else if (x == "e") {
+                    currentRoom = "west"
+                    roomName = "The Valley"
+                    roomMessage = "You arrive in a open, green wonderland! What would you like to do?"
+                } else if (x == "w") {
+
+                } else {
+                    //nothing
+                }
+            
+
+
+            //start of main room input
+            }else if (currentRoom == "main") {
+
+                //start of directions
+                if (x == "n") {
+                    currentRoom = "north"
+                    roomName = "The Beach"
+                    roomMessage = "You arrive in a seemlingly endless beach, what would you like to do?"
+                } else if (x == "s") {
+                    currentRoom = "south"
+                    roomName = "The Forest"
+                    roomMessage = "You arrive in a open forest, what would you like to do?"
+                } else if (x == "e") {
+                    currentRoom = "east"
+                    roomName = "The Lab"
+                    roomMessage = "You arrive in a odd looking lab, what would you like to do?"
+                } else if (x == "w") {
+                    currentRoom = "west"
+                    roomName = "The Valley"
+                    roomMessage = "You arrive in a open, green wonderland! What would you like to do?"
+                } else {
+                    //nothing
+                }
+
+
+                //end of main room input
+
+
+
+                //start of north room input
+            } else if (currentRoom == "north") {
+
+                //start of directions
+                if (x == "n") {
+
+                } else if (x == "s") {
+                    currentRoom = "main"
+                    roomName = "The Main Room"
+                    roomMessage = "You stand in a open room, nothing to see here..."
+                } else if (x == "e") {
+
+                    if(key == true){
+                    currentRoom = "o"
+                    boss();
+                    return
+                }else{
+                    alert("This door is locked!");
+                }
+                } else if (x == "w") {
+
+                } else {
+                    //nothing
+                }
+
+
+                //end of north room input
+
+                //start of south room input
+            } else if (currentRoom == "south") {
+
+                //start of directions
+                if (x == "n") {
+                    currentRoom = "main"
+                    roomName = "The Main Room"
+                    roomMessage = "You stand in a open room, nothing to see here..."
+                } else if (x == "s") {
+
+                } else if (x == "e") {
+
+                } else if (x == "w") {
+
+                } else {
+                    //nothing
+                }
+                //end of south room processing
+
+
+                //start of west room input
+            } else if (currentRoom == "west") {
+
+                //start of directions
+                if (x == "n") {
+
+                } else if (x == "s") {
+
+                } else if (x == "e") {
+                    currentRoom = "main"
+                    roomName = "The Main Room"
+                    roomMessage = "You stand in a open room, nothing to see here..."
+                } else if (x == "w") {
+                    currentRoom = "key";
+                    roomName = "The Key Room"
+                    if(key == false){
+                    key = true;
+                    roomMessage = "Wow! You found a key on the ground! I wonder there this could go.."
+                }else if(key == true){
+                    roomMessage = "This is the room you found the key in."
+                }
+                }else {
+                    //nothing
+                }
+                //end of west room processing
+
+
+
+                //start of east room input
+            } else if (currentRoom == "east") {
+
+                //start of directions
+                if (x == "n") {
+                    if(key == true){
+                    currentRoom = "o"
+                    boss();
+                    return
+                }else{
+                    alert("This door is locked!");
+                }
+                } else if (x == "s") {
+
+                } else if (x == "e") {
+
+                } else if (x == "w") {
+                    currentRoom = "main"
+                    roomName = "The Main Room"
+                    roomMessage = "You stand in a open room, nothing to see here..."
+                } else {
+                    //nothing
+                }
+                //end of east room processing
+
+
+
+                //start of o room input
+            } else if (currentRoom == "o") {
+
+                //start of directions
+                if (x == "n") {
+
+                } else if (x == "s") {
+                    currentRoom = "east"
+                    roomName = "The Lab"
+                    roomMessage = "You arrive in a odd looking lab, what would you like to do?"
+                } else if (x == "e") {
+
+                } else if (x == "w") {
+                    currentRoom = "north"
+                    roomName = "The Beach"
+                    roomMessage = "You arrive in a seemlingly endless beach, what would you like to do?"
+                } else {
+                    //nothing
+                }
+
+
+
+
+
+            }
+            //end of o room processing
+
+                if (currentRoom == "main") {
+                    //something
+                    console.log("Backgrond picture set to default")
+                    document.body.style.backgroundImage = "url('txtbg/this.jpg')";
+                } else if (currentRoom == "north") {
+                    //beach
+                    console.log("Backgrond picture set to beach")
+                    document.body.style.backgroundImage = "url('txtbg/beach.jpg')";
+                } else if (currentRoom == "south") {
+                    //forest
+                    console.log("Backgrond picture set to forst")
+                    document.body.style.backgroundImage = "url('txtbg/forest.jpg')";
+                } else if (currentRoom == "east") {
+                    //lab
+                    console.log("Backgrond picture set to lab")
+                    document.body.style.backgroundImage = "url('txtbg/lab.png')";
+                } else if (currentRoom == "west") {
+                    //valley
+                    console.log("Backgrond picture set to valley")
+                    document.body.style.backgroundImage = "url('txtbg/valley.png')";
+                } else if (currentRoom == "key") {
+                    //valley
+                    console.log("Backgrond picture set to key")
+                    document.body.style.backgroundImage = "url('txtbg/key.jpg')";
+                }else {
+                    console.log("error")
+                }
+                mapRefresh();
+
+            
+
+
+            var battlenum = Math.floor(Math.random()*(21-16+1)+16);
+            if(battlenum == 20){
+                battle();
+            }
+            console.log("battleNumber: "+ battlenum);
+
+
+
+        }
+
+        var inputHandle = function(n) {
+                if(life <= 0){
+        alert("Your character has died! You will now be sent back to the main website.");
+        window.history.back(-1);
+    }
+            input = ""
+            n = n.toLowerCase()
+            //input handling tree
+            if (n == "end") {
+                alert("Exiting...")
+                window.history.back(-1);
+            } else if (n == "help") {
+                reply("N is to move north, S for south, W for west, E for east. If you would like to end the game type \"end\".");
+
+            } else if (n == "s") {
+                move("s")
+                reply(roomMessage)
+                return
+            } else if (n == "e") {
+                move("e")
+                reply(roomMessage)
+                return
+            } else if (n == "w") {
+                move("w")
+                reply(roomMessage)
+                return
+            } else if (n == "n") {
+                move("n")
+                reply(roomMessage)
+                return
+            } else if(n == "talk"){
+                 convo();
+                return
+            }
+            console.log(currentRoom);
+
+        }
+
+        var enter = function() {
+            //main input center
+            console.log("Main Input")
+            input = document.getElementById("userInput").value
+            document.getElementById("userInput").value = ""
+            console.log("User input: " + input)
+            inputHandle(input);
+        }
+
+        document.addEventListener("keypress", function(event) {
+            if (event.keyCode == 13) {
+                enter();
+            }
+        })
+        var button = function() {
+            enter()
+        }
+
+        var reply = function(message) {
+            var m = message + "<br>Character: " + name + "<br>Current Room: " + roomName + "<br>Life: "+life+"<br>Score: "+score
+            document.getElementById("content").innerHTML = m
+            console.log("Message: " + m)
+        }
+        reply("You stand in a open room, nothing to see here...")
+
+        var backPage = function() {
+            window.history.back(-1);
+        }
+
+
+        document.getElementById('userInput').style.width = "200px";
+        document.getElementById('userInput').style.fontSize = "14pt";
+
+var userBattle = ""
+//battle system
+
+var battle = function(){
+    var enemyList = [
+        "Orc",
+        "Wolf",
+        "Vampire",
+        "Konzy"
+    ];
+    var enemyNameInt = Math.floor(Math.random()*(enemyList.length-1+1)+0)
+    enemyName = enemyList[enemyNameInt];
+    console.log("enemynamenumber: "+ enemyNameInt);
+
+    alert("You encountered an "+ enemyName +"!");
+    console.log("BATTLE: "+enemyName);
+
+
+    battleProcess();
+}
+
+var battleProcess = function(){
+    console.log(name+"'s Health: "+ life );
+    userBattle = prompt("Will you Attack it? (A)\nDefend (D)\nor will you give up the game? (give up)")
+    userBattle = userBattle.toLowerCase();
+    var heal = 0
+        if(userBattle == "a"){
+        score+=2;
+        var damage = Math.floor(Math.random()*(20-5+1)+5)
+        if(life > 50){
+            damage += 20;
+        }else if(life > 100){
+            damage += 60
+        }else if(life > 150){
+            damage += 110
+        }else{
+        }
+        life -= damage;
+        alert("The "+ enemyName +" fainted, but you lost "+ damage +" health!");
+    }else if(userBattle == "d"){
+        var damage = Math.floor(Math.random()*(10-1+1)+1)   
+        heal = Math.floor(Math.random() * (0 - -15) + -15);
+        life -= damage + heal;
+        if(heal*-1 > damage){
+            alert("You healed "+ (damage + heal)*-1 +" points!");
+        }else if(heal*-1 < damage){
+            alert("You lost "+ (damage + heal) +" life!")
+        }else{
+            alert("You cancelled out the damage!");
+        }
+
+        console.log("Heal: "+ heal);
+        console.log("damage: "+ damage);
+
+        battleProcess();
+
+    }else if(userBattle == "give up"){
+        life = 0;
+        alert("Why would you give up?");
+
+    }else{
+        alert("Your input was unrecognised, please retype something valid.");
+        battleProcess();
+        return;
+    }
+    if(life <= 0){
+        alert("Your character has died! You will now be sent back to the main website.");
+        window.history.back(-1);
+    }
+}
+
+
+//minimap
+
+var mapRefresh = function(){ 
+                if (currentRoom == "main") {
+                    document.getElementById("map").innerHTML = "/----------\\<br>|.----oy---.|<br>|--ooxo---|<br>|.----o----.|<br>\\---------/<br>"
+
+                } else if (currentRoom == "north") {
+                    document.getElementById("map").innerHTML = "/----------\\<br>|.----xy---.|<br>|--oooo---|<br>|.----o----.|<br>\\---------/<br>"
+                } else if (currentRoom == "south") {
+                    document.getElementById("map").innerHTML = "/----------\\<br>|.----oy---.|<br>|--oooo---|<br>|.----x----.|<br>\\---------/<br>"
+                } else if (currentRoom == "east") {
+                    document.getElementById("map").innerHTML = "/----------\\<br>|.----oy---.|<br>|--ooox---|<br>|.----o----.|<br>\\---------/<br>"
+                } else if (currentRoom == "west") {
+                    document.getElementById("map").innerHTML = "/----------\\<br>|.----oy---.|<br>|--oxoo---|<br>|.----o----.|<br>\\---------/<br>"
+                } else if (currentRoom == "key") {
+                    document.getElementById("map").innerHTML = "/----------\\<br>|.----oy---.|<br>|--xooo---|<br>|.----o----.|<br>\\---------/<br>"
+                }else {
+                    console.log("error")
+                }
+
+}
+
+
+    </script>
+
+
+    <style>
+        #map{
+            font-size: 30px;
+            font-weight: bolder;
+            font-color: black;
+            background-color: #707070;
+            border-radius: 20px;   
+            margin-left: 800px;
+            margin-right: 800px;   
+            text-align: center;
+            vertical-align: left;
+            line-height: 5px
+            font: bold Georgia     
+             }
+        body {
+            padding: 20px;
+            text-align: center;
+            background-image: url(txtbg/this.jpg);
+        }
+        
+        #content {
+            padding: 5px;
+            color: black;
+            font-size: 40px;
+            background-color: #707070;
+            margin-left: 300px;
+            margin-right: 300px;
+            border-radius: 80px;
+        }
+        
+        #userInput {
+            padding: 10px;
+        }
+        
+        #help {
+            float: right;
+        }
+    </style>
+
+
 
 
 </body>
